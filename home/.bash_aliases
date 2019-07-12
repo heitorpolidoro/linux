@@ -35,12 +35,6 @@ alias gs='git status && git log --oneline -1'
 alias gri='git rebase -i --autostash'
 alias gpl='git pull'
 
-alias gsl='git smartlog'
-alias gsb='git smartbranch'
-alias gsf='git smartfetch'
-alias gsp='git smartpush'
-alias gsc='git smartcommit'
-
 alias gcpc='git cherry-pick --continue'
 alias grbc='git rebase --continue'
 alias grh='_comando "git reset --hard HEAD~"'

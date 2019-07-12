@@ -49,8 +49,6 @@ Commands:
   up            Execute 'docker-compose up -d'
   down          Execute 'docker-compose down'
 ```
-#### gtp3
-TODO
 #### migrate_db
 Execute:
 ```
