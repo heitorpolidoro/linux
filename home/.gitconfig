@@ -1,0 +1,57 @@
+[color]
+    ui = auto
+
+[user]
+    name = $GIT_NAME
+    email = $GIT_EMAIL
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
+
+[core]
+    editor = vim
+
+[merge]
+    keepBackup = false;
+    tool = p4merge
+
+[mergetool]
+    prompt = false
+
+[mergetool "p4merge"]
+    cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+    keepTemporaries = false
+    trustExitCode = false
+    keepBackup = false
+
+[diff]
+    tool = p4merge
+
+[difftool]
+    prompt = false
+
+[difftool "p4merge"]
+    cmd = p4merge "$LOCAL" "$REMOTE"
+    keepTemporaries = false
+    trustExitCode = false
+    keepBackup = false
+
+[alias]
+    inject = "!f() { set -e; HASH=`git show $1 --pretty=format:\"%H\" -q`; shift; git commit -m \"fixup! $HASH\" $*; [ -n \"$(git diff-files)\" ] && git stash && DIRTY=1; git rebase $HASH^^ -i --autosquash; [ -n \"$DIRTY\" ] && git stash pop; }; f"
+    since = "!s() { git log --since=\"`git log --grep=$1 --pretty=format:%cd`\" --oneline; }; s"
+    clearLocalBranchs = "!clb() { echo Executing 'it remote prune origin' && git remote prune origin && echo Finding merged branchs && git branch --merged | grep \"master\\|next-release\\|$(git rev-parse --abbrev-ref HEAD)\" -v >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches;}; clb"
+[cola]
+	spellcheck = false

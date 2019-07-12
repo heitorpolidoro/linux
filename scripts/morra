@@ -1,0 +1,13 @@
+#!/bin/bash
+executavel="`echo $0 | sed 's/\/.*\///'`"
+
+if [ "$1" == "" ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+    echo "Digite \"$executavel <o que matar>\""
+    echo "ATENÇÃO! Ele irá matar TODOS os processos que der match com o argumento passado"
+else
+    matar=`ps aux | grep "$1" | sed  "/grep/d;/$executavel/d"  | awk '{print $2}'`
+
+    if [ "$matar" != "" ]; then
+    	kill -9 $matar
+    fi
+fi

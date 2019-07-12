@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -e
+# Reset
+Color_Off="$(tput sgr0)"
+
+#Formating
+Bold="$(tput bold)"
+
+DK_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]')
+
+clear_to_end_of_screen() {
+  tput ed
+}
+
+print_usage() {
+  echo "Usage: `basename $0` commands"
+}
+
+print_help() {
+  print_usage
+  echo "
+Execute docker the commands in order. The name is the current directory (${Bold}${DK_NAME}${Color_Off})
+
+Commands:
+
+  build         Execute 'docker build -t ${Bold}${DK_NAME}${Color_Off}'. If the file 'docker-compose.yaml or .yml' is present, execute 'docker-compose build'
+  run           Execute 'docker run ${Bold}${DK_NAME}${Color_Off}'
+  stop          Execute 'docker stop ${Bold}${DK_NAME}${Color_Off}'
+  up            Execute 'docker-compose up -d'
+  down          Execute 'docker-compose down'
+"
+}
+
+function finish {
+    tput cnorm
+    clear_to_end_of_screen
+}
+trap finish EXIT
+
+build() {
+    if [[ -f "docker-compose.yaml" ]] || [[ -f "docker-compose.yml" ]]; then
+        docker-compose build
+    else
+        docker build -t ${DK_NAME} .
+    fi
+}
+
+run() {
+    docker run ${DK_NAME}
+}
+
+stop() {
+    docker stop ${DK_NAME}
+}
+
+up() {
+    docker-compose up -d
+#    docker-compose up -d --force-recreate
+}
+
+down() {
+    docker-compose down
+}
+
+execute() {
+    ( set -x; $1)
+}
+
+# Parsing arguments
+parse_args() {
+    for i in "$@"; do
+        case ${i} in
+            -h)
+                print_usage
+                exit 0
+                ;;
+            --help)
+                print_help
+                exit 0
+                ;;
+            -*|--*)
+                echo "unknown option: ${i}"
+                print_usage
+                ;;
+            build)
+                execute build
+                ;;
+            run)
+                execute run
+                ;;
+            stop)
+                execute stop
+                ;;
+            up)
+                execute up
+                ;;
+            down)
+                execute down
+                ;;
+        esac
+    done
+}
+
+
+parse_args $*

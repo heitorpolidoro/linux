@@ -1,0 +1,7 @@
+if [[ -z $1 ]]; then
+    env=test
+else
+    env=$1
+fi
+rails db:migrate RAILS_ENV=${env}
+rails seed:migrate RAILS_ENV=${env}

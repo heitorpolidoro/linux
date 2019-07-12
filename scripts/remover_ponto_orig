@@ -1,0 +1,2 @@
+echo "Removendo arquivos *.orig:"
+find -iname "*\.orig" -print -delete

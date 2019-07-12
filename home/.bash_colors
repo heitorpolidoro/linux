@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+# Reset
+Color_Off="$(tput sgr0)"
+
+#Formating
+Bold="$(tput bold)"
+Dim="$(tput dim)"
+BeginUnderline="$(tput smul)"
+EndUnderline="$(tput rmul)"
+Reverse="$(tput rev)"
+Blinking="$(tput blink)"
+
+# Regular Colors
+Black="$(tput setaf 0)"
+Red="$(tput setaf 1)"
+Green="$(tput setaf 2)"
+Yellow="$(tput setaf 3)"
+Blue="$(tput setaf 4)"
+Purple="$(tput setaf 5)"
+Cyan="$(tput setaf 6)"
+White="$(tput setaf 7)"
+
+# Background
+On_Black="$(tput setab 0)"
+On_Red="$(tput setab 1)"
+On_Green="$(tput setab 2)"
+On_Yellow="$(tput setab 3)"
+On_Blue="$(tput setab 4)"
+On_Purple="$(tput setab 5)"
+On_Cyan="$(tput setab 6)"
+On_White="$(tput setab 7)"
+
+# High Intensity
+IBlack="$(tput setaf 8)"
+IRed="$(tput setaf 9)"
+IGreen="$(tput setaf 10)"
+IYellow="$(tput setaf 11)"
+IBlue="$(tput setaf 12)"
+IPurple="$(tput setaf 13)"
+ICyan="$(tput setaf 14)"
+IWhite="$(tput setaf 15)"
+
+# High Intensity backgrounds
+On_IBlack="$(tput setab 8)"
+On_IRed="$(tput setab 9)"
+On_IGreen="$(tput setab 10)"
+On_IYellow="$(tput setab 11)"
+On_IBlue="$(tput setab 12)"
+On_IPurple="$(tput setab 13)"
+On_ICyan="$(tput setab 14)"
+On_IWhite="$(tput setab 15)"
+
+show_colors() {
+    c=0
+    cols=8
+    add=0
+    until [[ ${c} -ge 256 ]]; do
+        tput setaf ${c}
+        echo -ne "${c}\t"
+        c=$((c + 1))
+        case ${c} in
+            17)
+            cols=6
+            add=2
+            ;;
+        esac
+
+        calc_c=$((c + add))
+        while [[ $((calc_c % cols)) -ne 0 ]]; do
+            tput setaf ${c}
+            echo -ne "${c}\t"
+            c=$((c + 1))
+            calc_c=$((c + add))
+        done
+        echo
+    done
+}
