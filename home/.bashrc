@@ -133,10 +133,3 @@ if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-export JAVA_OPTS="-Dsun.lang.ClassLoader.allowArraySyntax=true"
-source $HOME/workspace/quero_bolsa/dev.sh > /dev/null
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash

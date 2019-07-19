@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+[[ -z "$TERM" ]] && return
+
+
 # Reset
 Color_Off="$(tput sgr0)"
 

@@ -1,12 +1,37 @@
 #!/usr/bin/env bash
+#TODO
+DK_CONFIG_FILE=".dk.conf"
+
+# Set to exit the script on any command error
 set -e
+
 # Reset
 Color_Off="$(tput sgr0)"
 
 #Formating
 Bold="$(tput bold)"
 
-DK_NAME=$(basename $(pwd) | tr '[:upper:]' '[:lower:]')
+# Read de DK_CONFIG_FILE and export all environments variables
+if [[ -f "${HOME}/${DK_CONFIG_FILE}" ]]; then
+    while read line; do
+        if [[ $line != \#* ]] ; then
+            wd=${line%:*}
+            if [[ ${wd} == ${PWD}   ]]; then
+                export ${line#*:}
+            fi
+        fi
+    done < ${HOME}/${DK_CONFIG_FILE}
+fi
+
+# If the docker main container name is not set, use the local folder name as the main container name
+if [[ -z ${DK_NAME} ]]; then
+    DK_NAME=$(basename ${PWD} | tr '[:upper:]' '[:lower:]')
+fi
+
+# Check if there is a "docker-compose.yaml/yml to use docker-compose commands
+if [[ -f "docker-compose.yaml" ]] || [[ -f "docker-compose.yml" ]]; then
+    docker_compose="true"
+fi
 
 clear_to_end_of_screen() {
   tput ed
@@ -19,55 +44,79 @@ print_usage() {
 print_help() {
   print_usage
   echo "
-Execute docker the commands in order. The name is the current directory (${Bold}${DK_NAME}${Color_Off})
+Execute docker the commands in order. The name is define in the configuration or is the current directory (${Bold}${DK_NAME}${Color_Off})
 
 Commands:
 
-  build         Execute 'docker build -t ${Bold}${DK_NAME}${Color_Off}'. If the file 'docker-compose.yaml or .yml' is present, execute 'docker-compose build'
-  run           Execute 'docker run ${Bold}${DK_NAME}${Color_Off}'
-  stop          Execute 'docker stop ${Bold}${DK_NAME}${Color_Off}'
-  up            Execute 'docker-compose up -d'
-  down          Execute 'docker-compose down'
+  build [params]    Execute 'docker build -t ${Bold}${DK_NAME}${Color_Off} <params>'.
+                        If the file 'docker-compose.yaml or .yml' is present, execute 'docker-compose build'
+  run [params]      Execute 'docker run ${Bold}${DK_NAME}${Color_Off} <params>'
+  stop [params]     Execute 'docker stop ${Bold}${DK_NAME}${Color_Off} <params>'
+  up [params]       Execute 'docker-compose up <params>'
+  down [params]     Execute 'docker-compose down <params>'
+  exec command      Execute 'docker exec -it ${Bold}${DK_NAME}${Color_Off} <command>'
+                        You can omit 'exec' if it is the only command like 'dk bash' is equivalent to 'dk exec bash'
+                        If there is no container named ${Bold}${DK_NAME}${Color_Off} running when you execute the exec
+                        command, the script will execute 'dk up/run -d' (if there is a 'docker-compose.yaml/yml' present or not),
+                        execute the exec command, then execute 'dk down/stop'
+  --name=CONTAINER_NAME
+                    Replaces ${Bold}${DK_NAME}${Color_Off} with CONTAINER_NAME
+  --set-name=CONTAINER_MAIN_NAME
+                    Set the default container main name
 "
 }
 
-function finish {
-    tput cnorm
-    clear_to_end_of_screen
-}
-trap finish EXIT
-
 build() {
-    if [[ -f "docker-compose.yaml" ]] || [[ -f "docker-compose.yml" ]]; then
-        docker-compose build
+    if [[ ${docker_compose} ]]; then
+        echo "docker-compose build $*"
     else
-        docker build -t ${DK_NAME} .
+        echo "docker build -t ${DK_NAME} $* ."
     fi
 }
 
 run() {
-    docker run ${DK_NAME}
+    echo "docker run ${DK_NAME} $*"
 }
 
 stop() {
-    docker stop ${DK_NAME}
+    echo "docker stop ${DK_NAME} $*"
 }
 
 up() {
-    docker-compose up -d
-#    docker-compose up -d --force-recreate
+    echo "docker-compose up $*"
 }
 
 down() {
-    docker-compose down
+    echo "docker-compose down $*"
+}
+
+# Can't be "exec" because "exec" is a bash command
+dkexec() {
+    echo "docker exec -it ${DK_NAME} $*"
 }
 
 execute() {
-    ( set -x; $1)
+    execute_cmd=$($*)
+    ( set -x; ${execute_cmd})
 }
 
-# Parsing arguments
+update_value() {
+    file=$1
+    key=$2
+    value=$3
+    if [[ -f ${file} ]]; then
+        cp ${file} ${file}.bkp
+        escaped_file_name=$(echo "${PWD}:${key}=" | sed 's:/:\\\/:g')
+        sed "/${escaped_file_name}/d" ${file}.bkp > ${file}
+    fi
+    echo "${PWD}:${key}=${value}" >> ${file}
+}
+
+# Parse the arguments and execute the commands
 parse_args() {
+    commands=() # Array of commands to execute
+    params="" # Parameters for 1 command
+    command="" # Command to execute
     for i in "$@"; do
         case ${i} in
             -h)
@@ -78,28 +127,67 @@ parse_args() {
                 print_help
                 exit 0
                 ;;
-            -*|--*)
-                echo "unknown option: ${i}"
-                print_usage
+            --name=*) # Name of the container
+                DK_NAME=${i#*=}
                 ;;
-            build)
-                execute build
+            --set-name=*) # Set the main container name
+                name=${i#*=}
+                update_value ${HOME}/${DK_CONFIG_FILE} "DK_NAME" ${name}
+                echo "Container name '${name}' configured for path '${PWD}'"
+                exit 0
                 ;;
-            run)
-                execute run
+            build|run|stop|up|down|exec) # Docker commands
+                commands+=("${command} ${params}")
+                params=""
+                stop_or_down=""
+                if [[ ${i} == "exec" ]]; then
+                    command="dkexec" # Can't be "exec" because "exec" is a bash command
+                else
+                    command=${i}
+                fi
                 ;;
-            stop)
-                execute stop
-                ;;
-            up)
-                execute up
-                ;;
-            down)
-                execute down
+            *) # Append parameters for the last identified command
+                params+="${i} "
                 ;;
         esac
     done
+    # If there is no more arguments append the parameters to the last command, if there is no last command use the 'dkexec' command
+    if [[ -n ${command} ]]; then
+        commands+=("${command} ${params}")
+    else
+        commands+=("dkexec ${params}")
+    fi
+
+    # Execute all commands
+    for cmd in "${commands[@]}"; do
+        # If the command is 'dkexec' and there is no container named DK_NAME execute "dk up" and set "dk down" to be
+        #  executed when the script exits
+        if [[ ${cmd} == dkexec* ]] && [[ ! "$(docker ps | grep ${DK_NAME})" ]]; then
+            finish_stop_or_down() {
+                execute "down"
+                finish
+            }
+            trap finish_stop_or_down EXIT
+
+            if [[ ${docker_compose} ]]; then
+                execute "up -d"
+            else
+                execute "run -d"
+            fi
+        fi
+        execute ${cmd}
+    done
 }
 
+# Function to be executed when the script exits
+function finish {
+    set +x
+    tput cnorm
+    clear_to_end_of_screen
+}
 
+# Trap the function 'finish' to execute when the script exits
+trap finish EXIT
+
+# Parse the arguments and execute the commands
 parse_args $*
