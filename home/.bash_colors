@@ -2,6 +2,8 @@
 
 [[ -z "$TERM" ]] && return
 
+# Test if tput is available
+if tput -V >> /dev/null; then
 
 # Reset
 Color_Off="$(tput sgr0)"
@@ -79,3 +81,4 @@ show_colors() {
         echo
     done
 }
+fi

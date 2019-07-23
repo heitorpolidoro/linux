@@ -106,8 +106,8 @@ update_value() {
     value=$3
     if [[ -f ${file} ]]; then
         cp ${file} ${file}.bkp
-        escaped_file_name=$(echo "${PWD}:${key}=" | sed 's:/:\\\/:g')
-        sed "/${escaped_file_name}/d" ${file}.bkp > ${file}
+        escaped_info=$(echo "${PWD}:${key}=" | sed 's:/:\\\/:g')
+        sed "/${escaped_info}/d" ${file}.bkp > ${file}
     fi
     echo "${PWD}:${key}=${value}" >> ${file}
 }
@@ -163,17 +163,17 @@ parse_args() {
         # If the command is 'dkexec' and there is no container named DK_NAME execute "dk up" and set "dk down" to be
         #  executed when the script exits
         if [[ ${cmd} == dkexec* ]] && [[ ! "$(docker ps | grep ${DK_NAME})" ]]; then
+            if [[ ${docker_compose} ]]; then
+                execute "up -d ${DK_NAME}"
+            else
+                execute "run -d"
+            fi
+
             finish_stop_or_down() {
                 execute "down"
                 finish
             }
             trap finish_stop_or_down EXIT
-
-            if [[ ${docker_compose} ]]; then
-                execute "up -d"
-            else
-                execute "run -d"
-            fi
         fi
         execute ${cmd}
     done
