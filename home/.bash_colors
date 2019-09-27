@@ -3,7 +3,7 @@
 [[ -z "$TERM" ]] && return
 
 # Test if tput is available
-if tput -V >> /dev/null; then
+if tput sgr0 > /dev/null 2>&1; then
 
 # Reset
 Color_Off="$(tput sgr0)"
