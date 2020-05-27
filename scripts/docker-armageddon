@@ -1,0 +1,20 @@
+removecontainers() {
+    docker stop $(docker ps -aq)
+    docker rm $(docker ps -aq)
+}
+
+removeimages() {
+  docker rmi -f $(docker images --filter dangling=true -qa)
+  docker rmi -f $(docker images -qa)
+}
+
+removevolumes() {
+  docker volume rm $(docker volume ls --filter dangling=true -q)
+}
+
+armageddon() {
+    removecontainers
+    docker network prune -f
+    removeimages
+    removevolumes
+}

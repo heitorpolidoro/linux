@@ -1,0 +1,1 @@
+PYTHONPATH="/home/hpolidoro/personal-ws/scripts-python/" python3 -m gitp3.principal "$@"

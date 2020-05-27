@@ -2,8 +2,8 @@
     ui = auto
 
 [user]
-    name = $GIT_NAME
-    email = $GIT_EMAIL
+    name = Heitor Polidoro
+    email = heitor.polidoro@redealumni.com
 
 [color "branch"]
     current = yellow reverse
@@ -52,6 +52,6 @@
 [alias]
     inject = "!f() { set -e; HASH=`git show $1 --pretty=format:\"%H\" -q`; shift; git commit -m \"fixup! $HASH\" $*; [ -n \"$(git diff-files)\" ] && git stash && DIRTY=1; git rebase $HASH^^ -i --autosquash; [ -n \"$DIRTY\" ] && git stash pop; }; f"
     since = "!s() { git log --since=\"`git log --grep=$1 --pretty=format:%cd`\" --oneline; }; s"
-    clearLocalBranchs = "!clb() { echo Executing 'it remote prune origin' && git remote prune origin && echo Finding merged branchs && git branch --merged | grep \"master\\|next-release\\|$(git rev-parse --abbrev-ref HEAD)\" -v >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -d </tmp/merged-branches;}; clb"
+    clearLocalBranchs = "!clb() { echo Executing 'it remote prune origin' && git remote prune origin && echo Finding merged branchs && git branch | grep \"master\\|next-release\\|$(git rev-parse --abbrev-ref HEAD)\" -v >/tmp/merged-branches && vim /tmp/merged-branches && xargs git branch -D </tmp/merged-branches;}; clb"
 [cola]
 	spellcheck = false

@@ -23,6 +23,7 @@ alias ws='cd ${WORKSPACE}'
 alias p3='python3'
 alias scd='f() { cd $1 &>/dev/null && return || cd ${WORKSPACE}/$1; }; f'
 alias rc='rails c'
+alias pws='cd ~/personal-ws'
 
 # git aliases
 alias gc='git cola'
@@ -34,6 +35,12 @@ alias gf='git fetch -p'
 alias gs='git status && git log --oneline -1'
 alias gri='git rebase -i --autostash'
 alias gpl='git pull'
+
+alias gsl='gitp3 smartlog'
+alias gsb='gitp3 smartbranch'
+alias gsf='gitp3 smartfetch'
+alias gsp='gitp3 smartpush'
+alias gsc='gitp3 smartcommit'
 
 alias gcpc='git cherry-pick --continue'
 alias grbc='git rebase --continue'
@@ -76,3 +83,17 @@ _comando() {
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias please='sudo'
+alias tailf='tail -F'
+alias dk='bash /home/hpolidoro/bin/dk'
+
+alias pipeline='qb-beta pipeline'
+
+alias qbcprod='ssh -t ubuntu@tools.querobolsa.space "./dkc heitor"'
+alias qbbprod='ssh -t ubuntu@tools.querobolsa.space "./dkb heitor"'
+
+# docker
+alias docker_stop_all='docker stop $(docker ps -q)'
+
+# CLI
+alias ex='cli elixir'
+alias dk='cli docker'
