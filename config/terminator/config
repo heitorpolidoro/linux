@@ -1,0 +1,106 @@
+[global_config]
+  borderless = True
+  disable_real_transparency = True
+  title_hide_sizetext = True
+  title_transmit_fg_color = "#000000"
+  title_transmit_bg_color = "#ffffff"
+  title_inactive_fg_color = "#555753"
+  always_split_with_profile = True
+[keybindings]
+[profiles]
+  [[default]]
+    background_color = "#2e3440"
+    background_darkness = 0.6
+    cursor_color = "#aaaaaa"
+    foreground_color = "#ffffff"
+    scrollback_infinite = True
+  [[transparent]]
+    background_color = "#2e3440"
+    background_type = transparent
+    cursor_color = "#aaaaaa"
+    foreground_color = "#eeeeec"
+[layouts]
+  [[default]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 2901:27
+      maximised = False
+      fullscreen = False
+      size = 1259, 1016
+      title = siteops-panel
+      last_active_term = 50735119-7430-454a-96f0-ea1f29c1ea99
+      last_active_window = True
+    [[[terminal1]]]
+      type = Terminal
+      parent = child0
+      order = 0
+      profile = default
+      uuid = 50735119-7430-454a-96f0-ea1f29c1ea99
+      command = ""
+  [[sopa]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 1642:27
+      maximised = False
+      fullscreen = False
+      size = 1259, 1016
+      title = siteops-panel
+      last_active_term = 50735119-7430-454a-96f0-ea1f29c1ea99
+      last_active_window = True
+    [[[child1]]]
+      type = VPaned
+      parent = child0
+      order = 0
+      position = 506
+    [[[terminal1]]]
+      type = Terminal
+      parent = child1
+      order = 0
+      profile = default
+      uuid = 50735119-7430-454a-96f0-ea1f29c1ea99
+      directory = /home/hpolidoro/workspace/siteops-panel
+      command = docker-compose up; bash
+    [[[terminal3]]]
+      type = Terminal
+      parent = child1
+      order = 1
+      profile = default
+      uuid = 4239cba2-4f90-4926-9331-b2d5df4af252
+      directory = /home/hpolidoro/workspace/siteops-panel
+      command = sleep 5; docker-compose exec sopa mix phx.server; bash
+  [[bot]]
+    [[[child0]]]
+      type = Window
+      parent = ""
+      order = 0
+      position = 1642:27
+      maximised = False
+      fullscreen = False
+      size = 1259, 1016
+      title = siteops-panel
+      last_active_term = 50735119-7430-454a-96f0-ea1f29c1ea99
+      last_active_window = True
+    [[[child1]]]
+      type = VPaned
+      parent = child0
+      order = 0
+      position = 506
+    [[[terminal1]]]
+      type = Terminal
+      parent = child1
+      order = 0
+      profile = default
+      uuid = 50735119-7430-454a-96f0-ea1f29c1ea99
+      command = ssh bot "tail -f nohup.out -n 100"
+    [[[terminal3]]]
+      type = Terminal
+      parent = child1
+      order = 1
+      profile = default
+      uuid = 4239cba2-4f90-4926-9331-b2d5df4af252
+      command = ssh bot
+[plugins]
