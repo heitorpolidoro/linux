@@ -11,7 +11,7 @@ if [[ -f "$HOME/.bash_colors" ]]; then
     source "$HOME/.bash_colors"
 fi
 
-# include .bash_env if it exists
+# include .bash_env if it existsr
 if [[ -f "$HOME/.bash_env" ]]; then
     while read line; do
         if [[ $line != \#* ]] ; then
@@ -134,7 +134,7 @@ if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
 fi
 
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+# eval "$(rbenv init -)"
 export PATH="/opt/cli:$PATH"
 export PATH="/home/hpolidoro/personal-ws/cli:$PATH"
 export PATH=$PATH:/home/hpolidoro/.kafka/quero-kafka

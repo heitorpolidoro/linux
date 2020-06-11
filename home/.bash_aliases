@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-WORKSPACE=~/workspace
+WORKSPACE=/mnt/c/Users/heito/IdeaProjects/
 # enable color support of ls and also add handy aliases
 if [[ -x /usr/bin/dircolors ]]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -25,9 +25,12 @@ alias scd='f() { cd $1 &>/dev/null && return || cd ${WORKSPACE}/$1; }; f'
 alias rc='rails c'
 alias pws='cd ~/personal-ws'
 
+alias note='ssh -t note'
+alias nde='ssh -t note docker exec -it'
+
 # git aliases
 alias gc='git cola'
-alias gd='git diff'
+alias gd='git diff -w --word-diff=color'
 alias gm='git mergetool'
 alias go='git checkout'
 alias gr='git rebase --autostash '

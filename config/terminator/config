@@ -1,5 +1,5 @@
 [global_config]
-  borderless = True
+  borderless = False
   disable_real_transparency = True
   title_hide_sizetext = True
   title_transmit_fg_color = "#000000"
@@ -95,7 +95,7 @@
       order = 0
       profile = default
       uuid = 50735119-7430-454a-96f0-ea1f29c1ea99
-      command = ssh bot "tail -f nohup.out -n 100"
+      command = 'ssh bot "tail -f nohup.out -n 100"'
     [[[terminal3]]]
       type = Terminal
       parent = child1
