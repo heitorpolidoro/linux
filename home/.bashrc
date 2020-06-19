@@ -139,7 +139,3 @@ export PATH="/opt/cli:$PATH"
 export PATH="/home/hpolidoro/personal-ws/cli:$PATH"
 export PATH=$PATH:/home/hpolidoro/.kafka/quero-kafka
 export KAFKA_DATA_PATH=/var/data
-export KAFKA_DATA_PATH=/var/data
-export KAFKA_DATA_PATH=/var/data
-export KAFKA_DATA_PATH=/var/data
-export KAFKA_DATA_PATH=/var/data
