@@ -135,7 +135,11 @@ fi
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
-export PATH="/opt/cli:$PATH"
-export PATH="/home/hpolidoro/personal-ws/cli:$PATH"
 export PATH=$PATH:/home/hpolidoro/.kafka/quero-kafka
 export KAFKA_DATA_PATH=/var/data
+
+export PATH=/home/hpolidoro/bin:$PATH
+export PATH=/home/hpolidoro/.local/bin:$PATH
+
+alias qb="cli queroboot"
+
