@@ -86,22 +86,7 @@ fi
 
 # put branch and dif in the prompt, also if the reposotory is clean
 if [[ "$color_prompt" = yes ]]; then
-    export PS1="\[${Yellow}\]${USER}@$HostShort\[${Color_Off}\]:\[${Blue}\]$PathFull"'$(git status &>/dev/null;\
-        if [[ $? -eq 0 ]]; then \
-    sts=`git status -sb | grep "ahead\|behind\|frente\|atrás"`; \
-    if [[ "$sts" != "" ]]; then \
-        sts=${sts#*[}; \
-        sts=-${sts%]*}; \
-    fi; \
-            if [[ "$(git status -sb | sed '1d' )" == "" ]]; then \
-                # @4 - Clean repository - nothing to commit
-            echo "'"\[${Green}\]"'" \($(__git_ps1 "%s")$sts\); \
-            else \
-                # @5 - Changes to working tree
-                echo "'"\[${IRed}\]"'" {$(__git_ps1 "%s")$sts}; \
-            fi; \
-        fi)'"\[${Bold}${Yellow}\]\[${Color_Off}\]\$ "
-
+    export PS1="\[${Yellow}\]${USER}@$HostShort\[${Color_Off}\]:\[${Blue}\]$PathFull${Color_Off}$ "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
