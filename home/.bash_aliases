@@ -87,7 +87,6 @@ _comando() {
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias please='sudo'
 alias tailf='tail -F'
-alias dk='bash /home/hpolidoro/bin/dk'
 
 alias pipeline='qb-beta pipeline'
 
@@ -98,5 +97,13 @@ alias qbbprod='ssh -t ubuntu@tools.querobolsa.space "./dkb heitor"'
 alias docker_stop_all='docker stop $(docker ps -q)'
 
 # CLI
-alias ex='cli elixir'
-alias dk='cli docker'
+if [[ -n "$CLI_PROD" ]]; then
+    alias ex='cli elixir'
+    alias dk='cli docker'
+    alias udc='cli unifieddockercompose'
+else
+    alias udc='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py unifieddockercompose'
+    alias dk='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py docker'
+    alias ex='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py elixir'
+    alias cli='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py'
+fi
