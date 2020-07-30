@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-python3 /home/hpolidoro/personal-ws/cli/cli.py "$@"
