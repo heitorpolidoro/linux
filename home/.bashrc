@@ -133,13 +133,6 @@ if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-# eval "$(rbenv init -)"
-export PATH=$PATH:/home/hpolidoro/.kafka/quero-kafka
-export KAFKA_DATA_PATH=/var/data
+export PATH="$HOME/bin:$PATH"
 
-export PATH=/home/hpolidoro/bin:$PATH
-export PATH=/home/hpolidoro/.local/bin:$PATH
-
-alias qb="cli queroboot"
 
