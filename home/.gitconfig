@@ -23,7 +23,6 @@
 
 [core]
     editor = vim
-	autocrlf = true
 
 [merge]
     keepBackup = false;

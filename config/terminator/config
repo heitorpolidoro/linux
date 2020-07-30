@@ -25,9 +25,9 @@
       parent = ""
       order = 0
       position = 0:0
-      maximised = False
-      fullscreen = True
-      size = 1024, 512
+      maximised = True
+      fullscreen = False
+      size = 200, 200
       title = siteops-panel
       last_active_term = 50735119-7430-454a-96f0-ea1f29c1ea99
       last_active_window = True
