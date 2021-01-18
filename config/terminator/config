@@ -9,15 +9,17 @@
 [profiles]
   [[default]]
     background_color = "#2e3440"
-    background_darkness = 0.6
+    background_darkness = 0.74
     cursor_color = "#aaaaaa"
     foreground_color = "#ffffff"
     scrollback_infinite = True
   [[transparent]]
     background_color = "#2e3440"
+    background_darkness = 0.75
     background_type = transparent
     cursor_color = "#aaaaaa"
     foreground_color = "#eeeeec"
+    scrollback_infinite = True
 [layouts]
   [[default]]
     [[[child0]]]

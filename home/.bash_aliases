@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
-WORKSPACE=/mnt/c/Users/heito/IdeaProjects/
+WORKSPACE=~/workspace
 # enable color support of ls and also add handy aliases
 if [[ -x /usr/bin/dircolors ]]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
+  if [[ $(test -r ~/.dircolors) ]]; then
+    eval "$(dircolors -b ~/.dircolors)"
+   else
+     eval "$(dircolors -b)"
+  fi
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
+
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
 # some more ls aliases
@@ -21,9 +26,14 @@ alias l='ls -CF'
 alias r='reset &&'
 alias ws='cd ${WORKSPACE}'
 alias p3='python3'
-alias scd='f() { cd $1 &>/dev/null && return || cd ${WORKSPACE}/$1; }; f'
 alias rc='rails c'
 alias pws='cd ~/personal-ws'
+scd()
+{
+  if [[ ! $(cd "$1" &>/dev/null) ]]; then
+    cd ${WORKSPACE}/"$1" || return
+  fi
+}
 
 alias note='ssh -t note'
 alias nde='ssh -t note docker exec -it'
@@ -102,8 +112,9 @@ if [[ -n "$CLI_PROD" ]]; then
     alias dk='cli docker'
     alias udc='cli unifieddockercompose'
 else
-    alias udc='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py unifieddockercompose'
-    alias dk='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py docker'
-    alias ex='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py elixir'
-    alias cli='python3 /mnt/c/Users/heito/IdeaProjects/cli/polidoro_cli/main.py'
+    alias udc='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main unifieddockercompose'
+    alias dk='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main docker'
+    alias ex='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main elixir'
+    alias cli='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main'
+    alias rb='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main ruby'
 fi

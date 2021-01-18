@@ -13,9 +13,9 @@ fi
 
 # include .bash_env if it existsr
 if [[ -f "$HOME/.bash_env" ]]; then
-    while read line; do
+    while read -r line; do
         if [[ $line != \#* ]] ; then
-            export ${line}
+            export "${line?}"
         fi
     done < "$HOME/.bash_env"
 fi
@@ -38,7 +38,7 @@ HostFull="\H"
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
-HISTIGNORE="clear":"reset":"cd":"cd ~":"cd ..":"cd -":"fg":"ls":"la":"ll"
+HISTIGNORE="clear:reset:cd:cd ~:cd ..:cd -:fg:ls:la:ll"
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -86,7 +86,21 @@ fi
 
 # put branch and dif in the prompt, also if the reposotory is clean
 if [[ "$color_prompt" = yes ]]; then
-    export PS1="\[${Yellow}\]${USER}@$HostShort\[${Color_Off}\]:\[${Blue}\]$PathFull${Color_Off}$ "
+    export PS1="\[${Yellow}\]${USER}@$HostShort\[${Color_Off}\]:\[${Blue}\]$PathFull"'$(git status &>/dev/null;\
+        if [[ $? -eq 0 ]]; then \
+    sts=`git status -sb | grep "ahead\|behind\|frente\|atrás"`; \
+    if [[ "$sts" != "" ]]; then \
+        sts=${sts#*[}; \
+        sts=-${sts%]*}; \
+    fi; \
+            if [[ "$(git status -sb | sed '1d' )" == "" ]]; then \
+                # @4 - Clean repository - nothing to commit
+            echo "'"\[${Green}\]"'" \($(__git_ps1 "%s")$sts\); \
+            else \
+                # @5 - Changes to working tree
+                echo "'"\[${IRed}\]"'" {$(__git_ps1 "%s")$sts}; \
+            fi; \
+        fi)'"\[${Bold}${Yellow}\]\[${Color_Off}\]\$ "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -103,10 +117,8 @@ xterm*|rxvt*)
 esac
 
 # Alias definitions.
-# You may want to put all your additions into a separate file like
+# You may want to put all your aliases into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [[ -f ~/.bash_aliases ]]; then
     . ~/.bash_aliases
 fi
@@ -120,4 +132,6 @@ fi
 
 export PATH="$HOME/bin:$PATH"
 
+. "$HOME"/.asdf/asdf.sh
+. "$HOME"/.asdf/completions/asdf.bash
 
