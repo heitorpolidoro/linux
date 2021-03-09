@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-WORKSPACE=~/workspace
+export WORKSPACE=~/workspace
 # enable color support of ls and also add handy aliases
 if [[ -x /usr/bin/dircolors ]]; then
   if [[ $(test -r ~/.dircolors) ]]; then
@@ -30,9 +30,9 @@ alias rc='rails c'
 alias pws='cd ~/personal-ws'
 scd()
 {
-  if [[ ! $(cd "$1" &>/dev/null) ]]; then
-    cd ${WORKSPACE}/"$1" || return
-  fi
+    cd "$1" &> /dev/null \
+    || cd ${WORKSPACE}/"$1" &> /dev/null \
+    || cd ${WORKSPACE}/mlabs_"$1" &> /dev/null
 }
 
 alias note='ssh -t note'
@@ -98,23 +98,12 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 alias please='sudo'
 alias tailf='tail -F'
 
-alias pipeline='qb-beta pipeline'
-
-alias qbcprod='ssh -t ubuntu@tools.querobolsa.space "./dkc heitor"'
-alias qbbprod='ssh -t ubuntu@tools.querobolsa.space "./dkb heitor"'
-
 # docker
 alias docker_stop_all='docker stop $(docker ps -q)'
 
 # CLI
-if [[ -n "$CLI_PROD" ]]; then
-    alias ex='cli elixir'
-    alias dk='cli docker'
-    alias udc='cli unifieddockercompose'
-else
-    alias udc='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main unifieddockercompose'
-    alias dk='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main docker'
-    alias ex='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main elixir'
-    alias cli='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main'
-    alias rb='PYTHONPATH="~/workspace/cli/:~/workspace/cli/polidoro_cli/" python3 -m polidoro_cli.main ruby'
-fi
+alias dev_cli='PYTHONPATH="~/workspace/cli/" python3 -m polidoro_cli.main'
+alias ex='cli elixir'
+alias dk='cli docker'
+alias rb='cli ruby'
+alias mlabs='cli mlabs'
