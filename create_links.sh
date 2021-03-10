@@ -8,7 +8,15 @@ cd ${DIR}
 echo "Creating symbolic links in ~/"
 cd home
 for file in $(ls -dp .[^.]* | grep -v /); do
+  if [[ $(expr match "${file}" '\(.*\.sample\)') ]]; then
+    if [[ ! -f "${file%*.sample}" ]]; then
+      file_name="${file%*.sample}"
+      echo "Creating ${file_name}"
+      cp "${file}" "${file_name}"
+    fi
+  else
     ln -sfv ${DIR}/home/${file} ~/${file}
+  fi
 done
 cd - 1> /dev/null
 
