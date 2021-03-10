@@ -58,6 +58,3 @@
 	spellcheck = false
 [credential "https://github.com"]
 	helper = !gh auth git-credential
-[user]
-	name = heitor
-	email = heitor.polidoro@gmail.com
