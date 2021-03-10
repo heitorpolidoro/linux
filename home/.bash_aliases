@@ -31,8 +31,9 @@ alias pws='cd ~/personal-ws'
 scd()
 {
     cd "$1" &> /dev/null \
-    || cd ${WORKSPACE}/"$1" &> /dev/null \
-    || cd ${WORKSPACE}/mlabs_"$1" &> /dev/null
+    || cd "${WORKSPACE}/$1" &> /dev/null \
+    || cd "${WORKSPACE}/mlabs_$1" &> /dev/null \
+    || cd "$1"
 }
 
 alias note='ssh -t note'
